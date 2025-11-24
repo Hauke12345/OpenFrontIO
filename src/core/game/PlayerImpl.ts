@@ -76,6 +76,8 @@ export class PlayerImpl implements Player {
   private embargoes = new Map<PlayerID, Embargo>();
 
   public _borderTiles: Set<TileRef> = new Set();
+  // Cached shore tiles for performance optimization
+  private _shoreTilesCache: TileRef[] | null = null;
 
   public _units: Unit[] = [];
   public _tiles: Set<TileRef> = new Set();
@@ -286,6 +288,19 @@ export class PlayerImpl implements Player {
 
   borderTiles(): ReadonlySet<TileRef> {
     return this._borderTiles;
+  }
+
+  // Get cached shore tiles, computing if needed
+  shoreTiles(): readonly TileRef[] {
+    this._shoreTilesCache ??= Array.from(this._borderTiles).filter((t) =>
+      this.mg.isShore(t),
+    );
+    return this._shoreTilesCache;
+  }
+
+  // Invalidate shore tile cache (called when border tiles change)
+  invalidateShoreTilesCache(): void {
+    this._shoreTilesCache = null;
   }
 
   neighbors(): (Player | TerraNullius)[] {

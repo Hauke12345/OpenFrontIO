@@ -526,6 +526,7 @@ export class GameImpl implements Game {
       previousOwner._lastTileChange = this._ticks;
       previousOwner._tiles.delete(tile);
       previousOwner._borderTiles.delete(tile);
+      previousOwner.invalidateShoreTilesCache();
     }
     this._map.setOwnerID(tile, owner.smallID());
     owner._tiles.add(tile);
@@ -569,9 +570,13 @@ export class GameImpl implements Game {
         continue;
       }
       if (this.calcIsBorder(t)) {
-        (this.owner(t) as PlayerImpl)._borderTiles.add(t);
+        const owner = this.owner(t) as PlayerImpl;
+        owner._borderTiles.add(t);
+        owner.invalidateShoreTilesCache();
       } else {
-        (this.owner(t) as PlayerImpl)._borderTiles.delete(t);
+        const owner = this.owner(t) as PlayerImpl;
+        owner._borderTiles.delete(t);
+        owner.invalidateShoreTilesCache();
       }
     }
   }

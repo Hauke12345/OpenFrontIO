@@ -125,9 +125,7 @@ export function closestShoreFromPlayer(
   player: Player,
   target: TileRef,
 ): TileRef | null {
-  const shoreTiles = Array.from(player.borderTiles()).filter((t) =>
-    gm.isShore(t),
-  );
+  const shoreTiles = player.shoreTiles();
   if (shoreTiles.length === 0) {
     return null;
   }
@@ -191,9 +189,7 @@ export function candidateShoreTiles(
     maxY: null,
   };
 
-  const borderShoreTiles = Array.from(player.borderTiles()).filter((t) =>
-    gm.isShore(t),
-  );
+  const borderShoreTiles = player.shoreTiles();
 
   for (const tile of borderShoreTiles) {
     const distance = gm.manhattanDist(tile, target);

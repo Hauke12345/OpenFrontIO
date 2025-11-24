@@ -550,6 +550,8 @@ export interface Player {
   // Territory
   tiles(): ReadonlySet<TileRef>;
   borderTiles(): ReadonlySet<TileRef>;
+  shoreTiles(): readonly TileRef[];
+  invalidateShoreTilesCache(): void;
   numTilesOwned(): number;
   conquer(tile: TileRef): void;
   relinquish(tile: TileRef): void;
